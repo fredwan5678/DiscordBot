@@ -25,7 +25,7 @@ namespace DiscordBot.Modules
             await Context.Channel.SendMessageAsync("Quote added...probably");
         }
 
-        [Command("removeQuote")]
+        [Command("remQuote")]
         public async Task RemoveQuote([Remainder]string message)
         {
             int index;
