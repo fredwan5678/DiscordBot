@@ -22,6 +22,10 @@ namespace DiscordBot.Modules
         private QuoteHandler()
         {
             quoteData = dataSaver.LoadData<QuoteData>(quoteFile, quoteFolder);
+            if (quoteData.quotes == null)
+            {
+                quoteData.quotes = new List<string>();
+            }
         }
 
         ~QuoteHandler()
@@ -66,7 +70,7 @@ namespace DiscordBot.Modules
 
         public string getQuote(int quoteNumber)
         {
-            if (quoteNumber > quoteData.quotes.Count)
+            if (quoteNumber > quoteData.quotes.Count || quoteNumber < 1)
             {
                 return "";
             }

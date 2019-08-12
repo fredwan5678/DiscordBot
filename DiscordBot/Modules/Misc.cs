@@ -57,7 +57,7 @@ namespace DiscordBot.Modules
                 string quote = QuoteHandler.GetInstance().getQuote(index);
                 if (quote == "")
                 {
-                    await Context.Channel.SendMessageAsync("We don't even have that many quotes...");
+                    await Context.Channel.SendMessageAsync("Invalid quote number...");
                 }
                 else
                 {
