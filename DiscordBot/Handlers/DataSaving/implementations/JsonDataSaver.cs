@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Newtonsoft.Json;
 
-namespace DiscordBot.Modules.DataSaving.implementations
+namespace DiscordBot.Handlers.DataSaving.implementations
 {
     class JsonDataSaver : IDataSaver
     {
@@ -10,13 +10,13 @@ namespace DiscordBot.Modules.DataSaving.implementations
             if (!Directory.Exists(folderName))
                 Directory.CreateDirectory(folderName);
 
-            if (!File.Exists(folderName + "/" + fileName))
+            if (!File.Exists(folderName + "/" + fileName + ".json"))
             {
                 return default;
             }
             else
             {
-                string json = File.ReadAllText(folderName + "/" + fileName);
+                string json = File.ReadAllText(folderName + "/" + fileName + ".json");
                 return JsonConvert.DeserializeObject<T>(json);
             }
         }
@@ -24,10 +24,10 @@ namespace DiscordBot.Modules.DataSaving.implementations
         public void SaveData(object data, string fileName, string folderName)
         {
             if (!Directory.Exists(folderName))
-                Directory.CreateDirectory(fileName);
+                Directory.CreateDirectory(folderName);
 
             string json = JsonConvert.SerializeObject(data, Formatting.Indented);
-            File.WriteAllText(folderName + "/" + fileName, json);
+            File.WriteAllText(folderName + "/" + fileName + ".json", json);
         }
     }
 }
