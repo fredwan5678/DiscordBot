@@ -25,18 +25,11 @@ namespace DiscordBot
                 bot = new BotConfig();
                 string json = JsonConvert.SerializeObject(bot, Formatting.Indented);
                 File.WriteAllText(configFolder + "/" + configFile, json);
-
-                Handlers.DataHandler.saver = new Handlers.DataSaving.implementations.JsonDataSaver();
             }
             else
             {
                 string json = File.ReadAllText(configFolder + "/" + configFile);
                 bot = JsonConvert.DeserializeObject<BotConfig>(json);
-
-                if (bot.dataType == "json") //fix
-                {
-                    Handlers.DataHandler.saver = new Handlers.DataSaving.implementations.JsonDataSaver();
-                }
             }
         }
     }

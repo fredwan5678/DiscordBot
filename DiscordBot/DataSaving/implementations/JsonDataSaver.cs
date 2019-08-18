@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Newtonsoft.Json;
 
-namespace DiscordBot.Handlers.DataSaving.implementations
+namespace DiscordBot.DataSaving.implementations
 {
     class JsonDataSaver : IDataSaver
     {

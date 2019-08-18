@@ -205,11 +205,11 @@
   <ItemGroup>
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="Handlers\DataHandler.cs" />
-    <Compile Include="Handlers\DataSaving\IDataSaver.cs" />
-    <Compile Include="Handlers\DataSaving\implementations\JsonDataSaver.cs" />
+    <Compile Include="DIConfig.cs" />
+    <Compile Include="DataSaving\IDataSaver.cs" />
+    <Compile Include="DataSaving\implementations\JsonDataSaver.cs" />
     <Compile Include="Modules\Misc.cs" />
-    <Compile Include="Handlers\QuoteHandler.cs" />
+    <Compile Include="Modules\Quotes.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities.cs" />

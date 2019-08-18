@@ -23,7 +23,7 @@ namespace DiscordBot
             _client.Log += Log;
             await _client.LoginAsync(TokenType.Bot, Config.bot.token);
             await _client.StartAsync();
-            _handler = new CommandHandler();
+            _handler = new CommandHandler(DIConfig.GetServiceProvider());
             await _handler.InitializeAsync(_client);
             await Task.Delay(-1);
         }

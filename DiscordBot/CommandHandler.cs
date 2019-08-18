@@ -13,12 +13,18 @@ namespace DiscordBot
     {
         DiscordSocketClient _client;
         CommandService _service;
+        IServiceProvider _serviceProvider;
+
+        public CommandHandler(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
 
         public async Task InitializeAsync(DiscordSocketClient client)
         {
             _client = client;
             _service = new CommandService();
-            await _service.AddModulesAsync(Assembly.GetEntryAssembly(), null);
+            await _service.AddModulesAsync(Assembly.GetEntryAssembly(), _serviceProvider);
             _client.MessageReceived += HandleCommandAsync;
         }
 
@@ -31,7 +37,7 @@ namespace DiscordBot
             if (msg.HasStringPrefix(Config.bot.cmdPrefix, ref argPos)
                 || msg.HasMentionPrefix(_client.CurrentUser, ref argPos))
             {
-                var result = await _service.ExecuteAsync(context, argPos, null);
+                var result = await _service.ExecuteAsync(context, argPos, _serviceProvider);
                 if(!result.IsSuccess && result.Error != CommandError.UnknownCommand)
                 {
                     Console.WriteLine(result.ErrorReason);

@@ -1,4 +1,4 @@
-﻿namespace DiscordBot.Handlers.DataSaving
+﻿namespace DiscordBot.DataSaving
 {
     public interface IDataSaver
     {
