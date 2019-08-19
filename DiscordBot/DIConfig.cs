@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DiscordBot.DataSaving;
 using DiscordBot.DataSaving.implementations;
+using DiscordBot.DataHandlers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DiscordBot
@@ -19,6 +20,8 @@ namespace DiscordBot
             {
                 serviceCollection.AddSingleton<IDataSaver, JsonDataSaver>();
             }
+            serviceCollection.AddSingleton<QuoteHandler>();
+            serviceCollection.AddSingleton<RpsHandler>();
 
             return serviceCollection.BuildServiceProvider();
         }

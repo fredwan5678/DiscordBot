@@ -205,11 +205,18 @@
   <ItemGroup>
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="DataHandlers\QuoteHandler.cs" />
+    <Compile Include="DataHandlers\RpsHandler.cs" />
+    <Compile Include="DataHandlers\Utilities\Enums.cs" />
+    <Compile Include="DataHandlers\Utilities\RpsPlayer.cs" />
     <Compile Include="DIConfig.cs" />
     <Compile Include="DataSaving\IDataSaver.cs" />
     <Compile Include="DataSaving\implementations\JsonDataSaver.cs" />
+    <Compile Include="Modules\IServerData.cs" />
+    <Compile Include="Modules\IUserData.cs" />
     <Compile Include="Modules\Misc.cs" />
     <Compile Include="Modules\Quotes.cs" />
+    <Compile Include="Modules\rps.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities.cs" />

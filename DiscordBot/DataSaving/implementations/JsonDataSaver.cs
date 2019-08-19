@@ -21,7 +21,7 @@ namespace DiscordBot.DataSaving.implementations
             }
         }
 
-        public void SaveData(object data, string fileName, string folderName)
+        public void SaveData<T>(T data, string fileName, string folderName)
         {
             if (!Directory.Exists(folderName))
                 Directory.CreateDirectory(folderName);
