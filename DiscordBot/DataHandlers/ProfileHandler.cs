@@ -13,7 +13,7 @@ namespace DiscordBot.DataHandlers
         private IDataSaver _saver;
 
         private const string dataFolder = "Resources";
-        private const string warnFolder = "quoteData";
+        private const string warnFolder = "warnData";
         private const string warnDirectory = dataFolder + "/" + warnFolder;
 
         private Dictionary<string, WarnData> warnData = new Dictionary<string, WarnData>();
