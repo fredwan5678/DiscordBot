@@ -205,6 +205,7 @@
   <ItemGroup>
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="DataHandlers\ProfileHandler.cs" />
     <Compile Include="DataHandlers\QuoteHandler.cs" />
     <Compile Include="DataHandlers\RpsHandler.cs" />
     <Compile Include="DataHandlers\Utilities\Enums.cs" />
@@ -215,6 +216,7 @@
     <Compile Include="Modules\IServerData.cs" />
     <Compile Include="Modules\IUserData.cs" />
     <Compile Include="Modules\Misc.cs" />
+    <Compile Include="Modules\profiles.cs" />
     <Compile Include="Modules\Quotes.cs" />
     <Compile Include="Modules\rps.cs" />
     <Compile Include="Program.cs" />

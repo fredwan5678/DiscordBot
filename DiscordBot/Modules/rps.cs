@@ -96,5 +96,50 @@ namespace DiscordBot.Modules
                 await Context.Channel.SendMessageAsync("You cannot cancel someone else's rps!");
             }
         }
+
+        [Command("rpsLeaderboard")]
+        public async Task Board([Remainder]string message)
+        {
+            int amt;
+
+            if (Int32.TryParse(message, out amt) && amt > 0)
+            {
+                await Context.Channel.SendMessageAsync(Context.Guild.Name + "'s RPS leaders:");
+                Dictionary<string, int> scores = _handler.GenerateLeaderboard(Context.Guild.Name, amt);
+                if (scores.Count > 0)
+                {
+                    foreach (var i in scores)
+                    {
+                        await Context.Channel.SendMessageAsync(i.Key + ": " + i.Value);
+                    }
+                }
+                else
+                {
+                    await Context.Channel.SendMessageAsync("No games of rps have been played in this server...");
+                }
+            }
+            else
+            {
+                await Context.Channel.SendMessageAsync("Invalid number...");
+            }
+        }
+
+        [Command("rpsLeaderboard")]
+        public async Task Board()
+        {
+            await Context.Channel.SendMessageAsync(Context.Guild.Name + "'s RPS leaders:");
+            Dictionary<string, int> scores = _handler.GenerateLeaderboard(Context.Guild.Name, 9);
+            if (scores.Count > 0)
+            {
+                foreach (var i in scores)
+                {
+                    await Context.Channel.SendMessageAsync(i.Key + ": " + i.Value);
+                }
+            }
+            else
+            {
+                await Context.Channel.SendMessageAsync("No games of rps have been played in this server...");
+            }
+        }
     }
 }

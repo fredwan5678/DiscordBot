@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DiscordBot.Modules
 {
-    interface IServerData
+    public interface IServerData
     {
         Dictionary<string, string> getServerData(string server);
 

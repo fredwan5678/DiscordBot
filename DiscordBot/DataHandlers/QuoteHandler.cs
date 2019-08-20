@@ -18,14 +18,19 @@ namespace DiscordBot.DataHandlers
 
         private Dictionary<string, QuoteData> quoteData = new Dictionary<string, QuoteData>();
 
-        public QuoteHandler(IDataSaver saver)
+        private ProfileHandler _dataHub;
+
+        public QuoteHandler(IDataSaver saver, ProfileHandler dataHub)
         {
             _saver = saver;
+            _dataHub = dataHub;
+
+            registerToServerProfile();
         }
 
         private void SaveQuotes(string guildName)
         {
-            _saver.SaveData<QuoteData>(quoteData[guildName], guildName, quoteDirectory);
+            _saver.SaveData(quoteData[guildName], guildName, quoteDirectory);
         }
 
         private void LoadQuotes(string guildName)
@@ -104,14 +109,14 @@ namespace DiscordBot.DataHandlers
         {
             Dictionary<string, string> data = new Dictionary<string, string>();
 
-            data["Amount of Quotes"] = GetQuoteAmt(server).ToString();
+            data["Amount of Quotes: "] = GetQuoteAmt(server).ToString();
 
             return data;
         }
 
         public void registerToServerProfile()
         {
-            throw new NotImplementedException();
+            _dataHub.serverData.Add(this);
         }
     }
 

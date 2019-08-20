@@ -8,7 +8,7 @@ namespace DiscordBot.Modules
 {
     public interface IUserData
     {
-        Dictionary<string, string> getUserData(string user);
+        Dictionary<string, string> getUserData(string server, string user);
 
         void registerToProfile();
     }

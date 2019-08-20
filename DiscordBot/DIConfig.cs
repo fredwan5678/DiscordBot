@@ -22,6 +22,7 @@ namespace DiscordBot
             }
             serviceCollection.AddSingleton<QuoteHandler>();
             serviceCollection.AddSingleton<RpsHandler>();
+            serviceCollection.AddSingleton<ProfileHandler>();
 
             return serviceCollection.BuildServiceProvider();
         }

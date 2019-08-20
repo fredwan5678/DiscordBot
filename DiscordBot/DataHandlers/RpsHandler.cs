@@ -19,17 +19,23 @@ namespace DiscordBot.DataHandlers
 
         private Dictionary<string, RpsLeaderboard> leaderboard = new Dictionary<string, RpsLeaderboard>();
 
+        private ProfileHandler _dataHub;
+
         public string lastUser = "";
         public string lastUserChoice = "";
 
-        public RpsHandler(IDataSaver saver)
+        public RpsHandler(IDataSaver saver, ProfileHandler dataHub)
         {
             _saver = saver;
+            _dataHub = dataHub;
+
+            registerToProfile();
+            registerToServerProfile();
         }
 
         private void SaveLeaderboard(string guildName)
         {
-            _saver.SaveData<RpsLeaderboard>(leaderboard[guildName], guildName, leaderboardDirectory);
+            _saver.SaveData(leaderboard[guildName], guildName, leaderboardDirectory);
         }
 
         private void LoadLeaderboard(string guildName)
@@ -114,24 +120,83 @@ namespace DiscordBot.DataHandlers
             SaveLeaderboard(guildName);
         }
 
-        public Dictionary<string, string> getServerData(string server)
+        public Dictionary<string, int> GenerateLeaderboard(string server, int amt)
         {
-            throw new NotImplementedException();
+            LoadLeaderboard(server);
+            Dictionary<string, int> board = new Dictionary<string, int>();
+
+            amt = Math.Min(amt, leaderboard[server].leaderboardNames.Count);
+            var iter = leaderboard[server].leaderboardScores.Reverse().GetEnumerator();
+
+            for (int i = 0; i < amt; i++ )
+            {
+                iter.MoveNext();
+                board[iter.Current.getName()] = iter.Current.getScore();
+            }
+
+            return board;
         }
 
-        public Dictionary<string, string> getUserData(string user)
+        public Dictionary<string, string> getServerData(string server)
         {
-            throw new NotImplementedException();
+            LoadLeaderboard(server);
+
+            Dictionary<string, string> data = new Dictionary<string, string>();
+
+            var iter = leaderboard[server].leaderboardScores.Reverse().GetEnumerator();
+
+            int amt = Math.Min(3, leaderboard[server].leaderboardNames.Count);
+
+            if (amt == 0) data["Top RPS Players: "] = "No rps games played yet...";
+            else
+            {
+                string topPlayers = "";
+
+                for (int i = 0; i < amt - 1; i++)
+                {
+                    iter.MoveNext();
+                    topPlayers += iter.Current.getName();
+                    topPlayers += ", ";
+                }
+                iter.MoveNext();
+                topPlayers += iter.Current.getName();
+                data["Top RPS Players: "] = topPlayers;
+            }
+
+            return data;
+        }
+
+        public Dictionary<string, string> getUserData(string server, string user)
+        {
+            LoadLeaderboard(server);
+
+            Dictionary<string, string> data = new Dictionary<string, string>();
+
+            if (leaderboard[server].leaderboardNames.ContainsKey(user))
+            {
+                data["RPS score: "] = leaderboard[server].leaderboardNames[user].getScore().ToString();
+                data["RPS wins: "] = leaderboard[server].leaderboardNames[user].getWins().ToString();
+                data["RPS losses: "] = leaderboard[server].leaderboardNames[user].getLosses().ToString();
+                data["Total RPS games: "] = leaderboard[server].leaderboardNames[user].getTotal().ToString();
+            }
+            else
+            {
+                data["RPS score: "] = "0";
+                data["RPS wins: "] = "0";
+                data["RPS losses: "] = "0";
+                data["Total RPS games: "] = "0";
+            }
+            return data;
         }
 
         public void registerToProfile()
         {
-            throw new NotImplementedException();
+            _dataHub.userData.Add(this);
         }
 
         public void registerToServerProfile()
         {
-            throw new NotImplementedException();
+            _dataHub.serverData.Add(this);
         }
     }
 

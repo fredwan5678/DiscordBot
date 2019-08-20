@@ -53,6 +53,28 @@ namespace DiscordBot.DataHandlers.Utilities
             else return 0;
         }
 
+        public string getName()
+        {
+            return _name;
+        }
+
+        public int getScore()
+        {
+            return _score;
+        }
+        public int getWins()
+        {
+            return _wins;
+        }
+        public int getLosses()
+        {
+            return _losses;
+        }
+        public int getTotal()
+        {
+            return _total;
+        }
+
         public bool Equals(RpsPlayer other)
         {
             if (_name == other._name && _score == other._score && _total == other._total)
