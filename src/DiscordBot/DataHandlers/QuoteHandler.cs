@@ -10,7 +10,7 @@ namespace DiscordBot.DataHandlers
         private IDataSaver _saver;
 
         private const string DATA_FOLDER = "Resources";
-        private const string QUOTE_FOLDER = "quoteData";
+        private const string QUOTE_FOLDER = "QuoteData";
         private const string QUOTE_DIRECTORY = DATA_FOLDER + "/" + QUOTE_FOLDER;
 
         private Dictionary<string, QuoteData> _quoteData = new Dictionary<string, QuoteData>();

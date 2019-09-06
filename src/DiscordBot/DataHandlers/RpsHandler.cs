@@ -11,7 +11,7 @@ namespace DiscordBot.DataHandlers
         private IDataSaver _saver;
 
         private const string DATA_FOLDER = "Resources";
-        private const string LEADERBOARD_FOLDER = "rpsData";
+        private const string LEADERBOARD_FOLDER = "RpsData";
         private const string LEADERBOARD_DIRECTORY = DATA_FOLDER + "/" + LEADERBOARD_FOLDER;
 
         private Dictionary<string, RpsLeaderboard> _leaderboard = new Dictionary<string, RpsLeaderboard>();
