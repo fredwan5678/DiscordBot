@@ -1,9 +1,9 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace DiscordBot.DataHandlers.Utilities
+namespace DiscordBot.Util
 {
-    class RpsPlayer : IComparable<RpsPlayer>, IEquatable<RpsPlayer>
+    public class RpsPlayer : IComparable<RpsPlayer>, IEquatable<RpsPlayer>
     {
         [JsonProperty]
         private string _name;

@@ -215,7 +215,7 @@
     <Compile Include="DataHandlers\Utilities\RpsPlayer.cs" />
     <Compile Include="DIConfig.cs" />
     <Compile Include="DataSaving\IDataSaver.cs" />
-    <Compile Include="DataSaving\implementations\JsonDataSaver.cs" />
+    <Compile Include="DataSaving\JsonDataSaver.cs" />
     <Compile Include="Modules\IServerData.cs" />
     <Compile Include="Modules\IUserData.cs" />
     <Compile Include="Modules\Misc.cs" />
