@@ -3,9 +3,6 @@ using DiscordBot.DataSaving;
 using DiscordBot.Modules;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiscordBot.DataHandlers
 {
@@ -13,16 +10,16 @@ namespace DiscordBot.DataHandlers
     {
         private IDataSaver _saver;
 
-        private const string dataFolder = "Resources";
-        private const string leaderboardFolder = "rpsData";
-        private const string leaderboardDirectory = dataFolder + "/" + leaderboardFolder;
+        private const string DATA_FOLDER = "Resources";
+        private const string LEADERBOARD_FOLDER = "rpsData";
+        private const string LEADERBOARD_DIRECTORY = DATA_FOLDER + "/" + LEADERBOARD_FOLDER;
 
-        private Dictionary<string, RpsLeaderboard> leaderboard = new Dictionary<string, RpsLeaderboard>();
+        private Dictionary<string, RpsLeaderboard> _leaderboard = new Dictionary<string, RpsLeaderboard>();
 
         private ProfileHandler _dataHub;
 
-        public string lastUser = "";
-        public string lastUserChoice = "";
+        public string LastUser = "";
+        public string LastUserChoice = "";
 
         public RpsHandler(IDataSaver saver, ProfileHandler dataHub)
         {
@@ -35,70 +32,70 @@ namespace DiscordBot.DataHandlers
 
         private void SaveLeaderboard(string guildName)
         {
-            _saver.SaveData(leaderboard[guildName], guildName, leaderboardDirectory);
+            _saver.SaveData(_leaderboard[guildName], guildName, LEADERBOARD_DIRECTORY);
         }
 
         private void LoadLeaderboard(string guildName)
         {
-            if (!leaderboard.ContainsKey(guildName))
+            if (!_leaderboard.ContainsKey(guildName))
             {
-                leaderboard[guildName] = _saver.LoadData<RpsLeaderboard>(guildName, leaderboardDirectory);
-                if (leaderboard[guildName].leaderboardNames == null)
+                _leaderboard[guildName] = _saver.LoadData<RpsLeaderboard>(guildName, LEADERBOARD_DIRECTORY);
+                if (_leaderboard[guildName].leaderboardNames == null)
                 {
                     RpsLeaderboard data = new RpsLeaderboard();
                     data.leaderboardNames = new Dictionary<string, RpsPlayer>();
                     data.leaderboardScores = new SortedSet<RpsPlayer>();
-                    leaderboard[guildName] = data;
+                    _leaderboard[guildName] = data;
                 }
             }
         }
 
         private void Winner(string guildName, string player)
         {
-            RpsPlayer temp = leaderboard[guildName].leaderboardNames[player];
-            leaderboard[guildName].leaderboardScores.Remove(temp);
-            leaderboard[guildName].leaderboardNames[player].AddWin();
-            leaderboard[guildName].leaderboardScores.Add(leaderboard[guildName].leaderboardNames[player]);
+            RpsPlayer temp = _leaderboard[guildName].leaderboardNames[player];
+            _leaderboard[guildName].leaderboardScores.Remove(temp);
+            _leaderboard[guildName].leaderboardNames[player].AddWin();
+            _leaderboard[guildName].leaderboardScores.Add(_leaderboard[guildName].leaderboardNames[player]);
         }
 
         private void Loser(string guildName, string player)
         {
-            RpsPlayer temp = leaderboard[guildName].leaderboardNames[player];
-            leaderboard[guildName].leaderboardScores.Remove(temp);
-            leaderboard[guildName].leaderboardNames[player].AddLoss();
-            leaderboard[guildName].leaderboardScores.Add(leaderboard[guildName].leaderboardNames[player]);
+            RpsPlayer temp = _leaderboard[guildName].leaderboardNames[player];
+            _leaderboard[guildName].leaderboardScores.Remove(temp);
+            _leaderboard[guildName].leaderboardNames[player].AddLoss();
+            _leaderboard[guildName].leaderboardScores.Add(_leaderboard[guildName].leaderboardNames[player]);
         }
 
         private void Tie(string guildName, string player1, string player2)
         {
-            RpsPlayer temp = leaderboard[guildName].leaderboardNames[player1];
-            leaderboard[guildName].leaderboardScores.Remove(temp);
-            leaderboard[guildName].leaderboardNames[player1].AddTie();
-            leaderboard[guildName].leaderboardScores.Add(leaderboard[guildName].leaderboardNames[player1]);
+            RpsPlayer temp = _leaderboard[guildName].leaderboardNames[player1];
+            _leaderboard[guildName].leaderboardScores.Remove(temp);
+            _leaderboard[guildName].leaderboardNames[player1].AddTie();
+            _leaderboard[guildName].leaderboardScores.Add(_leaderboard[guildName].leaderboardNames[player1]);
 
-            temp = leaderboard[guildName].leaderboardNames[player2];
-            leaderboard[guildName].leaderboardScores.Remove(temp);
-            leaderboard[guildName].leaderboardNames[player2].AddTie();
-            leaderboard[guildName].leaderboardScores.Add(leaderboard[guildName].leaderboardNames[player2]);
+            temp = _leaderboard[guildName].leaderboardNames[player2];
+            _leaderboard[guildName].leaderboardScores.Remove(temp);
+            _leaderboard[guildName].leaderboardNames[player2].AddTie();
+            _leaderboard[guildName].leaderboardScores.Add(_leaderboard[guildName].leaderboardNames[player2]);
         }
 
         private void AddPlayer(string playerName, string guildName)
         {
             LoadLeaderboard(guildName);
             RpsPlayer player = new RpsPlayer(playerName);
-            leaderboard[guildName].leaderboardNames[playerName] = player;
-            leaderboard[guildName].leaderboardScores.Add(player);
+            _leaderboard[guildName].leaderboardNames[playerName] = player;
+            _leaderboard[guildName].leaderboardScores.Add(player);
             SaveLeaderboard(guildName);
         }
 
         public void AddGame(string guildName, string player1, string player2, outcome winner)
         {
             LoadLeaderboard(guildName);
-            if (!leaderboard[guildName].leaderboardNames.ContainsKey(player1))
+            if (!_leaderboard[guildName].leaderboardNames.ContainsKey(player1))
             {
                 AddPlayer(player1, guildName);
             }
-            if (!leaderboard[guildName].leaderboardNames.ContainsKey(player2))
+            if (!_leaderboard[guildName].leaderboardNames.ContainsKey(player2))
             {
                 AddPlayer(player2, guildName);
             }
@@ -125,8 +122,8 @@ namespace DiscordBot.DataHandlers
             LoadLeaderboard(server);
             Dictionary<string, int> board = new Dictionary<string, int>();
 
-            amt = Math.Min(amt, leaderboard[server].leaderboardNames.Count);
-            var iter = leaderboard[server].leaderboardScores.Reverse().GetEnumerator();
+            amt = Math.Min(amt, _leaderboard[server].leaderboardNames.Count);
+            var iter = _leaderboard[server].leaderboardScores.Reverse().GetEnumerator();
 
             for (int i = 0; i < amt; i++ )
             {
@@ -143,9 +140,9 @@ namespace DiscordBot.DataHandlers
 
             Dictionary<string, string> data = new Dictionary<string, string>();
 
-            var iter = leaderboard[server].leaderboardScores.Reverse().GetEnumerator();
+            var iter = _leaderboard[server].leaderboardScores.Reverse().GetEnumerator();
 
-            int amt = Math.Min(3, leaderboard[server].leaderboardNames.Count);
+            int amt = Math.Min(3, _leaderboard[server].leaderboardNames.Count);
 
             if (amt == 0) data["Top RPS Players: "] = "No rps games played yet...";
             else
@@ -172,12 +169,12 @@ namespace DiscordBot.DataHandlers
 
             Dictionary<string, string> data = new Dictionary<string, string>();
 
-            if (leaderboard[server].leaderboardNames.ContainsKey(user))
+            if (_leaderboard[server].leaderboardNames.ContainsKey(user))
             {
-                data["RPS score: "] = leaderboard[server].leaderboardNames[user].getScore().ToString();
-                data["RPS wins: "] = leaderboard[server].leaderboardNames[user].getWins().ToString();
-                data["RPS losses: "] = leaderboard[server].leaderboardNames[user].getLosses().ToString();
-                data["Total RPS games: "] = leaderboard[server].leaderboardNames[user].getTotal().ToString();
+                data["RPS score: "] = _leaderboard[server].leaderboardNames[user].getScore().ToString();
+                data["RPS wins: "] = _leaderboard[server].leaderboardNames[user].getWins().ToString();
+                data["RPS losses: "] = _leaderboard[server].leaderboardNames[user].getLosses().ToString();
+                data["Total RPS games: "] = _leaderboard[server].leaderboardNames[user].getTotal().ToString();
             }
             else
             {
@@ -191,12 +188,12 @@ namespace DiscordBot.DataHandlers
 
         public void registerToProfile()
         {
-            _dataHub.userData.Add(this);
+            _dataHub.UserData.Add(this);
         }
 
         public void registerToServerProfile()
         {
-            _dataHub.serverData.Add(this);
+            _dataHub.ServerData.Add(this);
         }
     }
 

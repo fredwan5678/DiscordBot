@@ -1,10 +1,6 @@
 ﻿using DiscordBot.DataSaving;
 using DiscordBot.Modules;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiscordBot.DataHandlers
 {
@@ -12,14 +8,14 @@ namespace DiscordBot.DataHandlers
     {
         private IDataSaver _saver;
 
-        private const string dataFolder = "Resources";
-        private const string warnFolder = "warnData";
-        private const string warnDirectory = dataFolder + "/" + warnFolder;
+        private const string DATA_FOLDER = "Resources";
+        private const string WARN_FOLDER = "warnData";
+        private const string WARN_DIRECTORY = DATA_FOLDER + "/" + WARN_FOLDER;
 
-        private Dictionary<string, WarnData> warnData = new Dictionary<string, WarnData>();
+        private Dictionary<string, WarnData> _warnData = new Dictionary<string, WarnData>();
 
-        public List<IUserData> userData = new List<IUserData>();
-        public List<IServerData> serverData = new List<IServerData>();
+        public List<IUserData> UserData = new List<IUserData>();
+        public List<IServerData> ServerData = new List<IServerData>();
 
         public ProfileHandler(IDataSaver saver)
         {
@@ -28,19 +24,19 @@ namespace DiscordBot.DataHandlers
 
         private void SaveWarnings(string guildName)
         {
-            _saver.SaveData(warnData[guildName], guildName, warnDirectory);
+            _saver.SaveData(_warnData[guildName], guildName, WARN_DIRECTORY);
         }
 
         private void LoadWarnings(string guildName)
         {
-            if (!warnData.ContainsKey(guildName))
+            if (!_warnData.ContainsKey(guildName))
             {
-                warnData[guildName] = _saver.LoadData<WarnData>(guildName, warnDirectory);
-                if (warnData[guildName].warnings == null)
+                _warnData[guildName] = _saver.LoadData<WarnData>(guildName, WARN_DIRECTORY);
+                if (_warnData[guildName].warnings == null)
                 {
                     WarnData data = new WarnData();
                     data.warnings = new Dictionary<string, int>();
-                    warnData[guildName] = data;
+                    _warnData[guildName] = data;
                 }
             }
         }
@@ -48,29 +44,29 @@ namespace DiscordBot.DataHandlers
         public int AddWarn(string guildName, string user)
         {
             LoadWarnings(guildName);
-            warnData[guildName].warnings[user]++;
+            _warnData[guildName].warnings[user]++;
             SaveWarnings(guildName);
 
-            return warnData[guildName].warnings[user];
+            return _warnData[guildName].warnings[user];
         }
 
         public int RemoveWarn(string guildName, string user)
         {
             LoadWarnings(guildName);
-            warnData[guildName].warnings[user]--;
+            _warnData[guildName].warnings[user]--;
             SaveWarnings(guildName);
 
-            if (warnData[guildName].warnings[user] < 0)
+            if (_warnData[guildName].warnings[user] < 0)
             {
-                warnData[guildName].warnings[user] = 0;
+                _warnData[guildName].warnings[user] = 0;
             }
-            return warnData[guildName].warnings[user];
+            return _warnData[guildName].warnings[user];
         }
 
         public void ResetWarn(string guildName, string user)
         {
             LoadWarnings(guildName);
-            warnData[guildName].warnings[user] = 0;
+            _warnData[guildName].warnings[user] = 0;
             SaveWarnings(guildName);
         }
 
@@ -81,7 +77,7 @@ namespace DiscordBot.DataHandlers
 
             Dictionary<string, string> temp = new Dictionary<string, string>();
 
-            foreach (IUserData dataset in userData)
+            foreach (IUserData dataset in UserData)
             {
                 temp = dataset.getUserData(guildName, user);
                 foreach (var entry in temp)
@@ -91,9 +87,9 @@ namespace DiscordBot.DataHandlers
             }
 
             userProperties["Warnings: "] = "0";
-            if (warnData[guildName].warnings.ContainsKey(user))
+            if (_warnData[guildName].warnings.ContainsKey(user))
             {
-                userProperties["Warnings: "] = warnData[guildName].warnings[user].ToString();
+                userProperties["Warnings: "] = _warnData[guildName].warnings[user].ToString();
             }
 
             return userProperties;
@@ -105,7 +101,7 @@ namespace DiscordBot.DataHandlers
 
             Dictionary<string, string> temp = new Dictionary<string, string>();
 
-            foreach (IServerData dataset in serverData)
+            foreach (IServerData dataset in ServerData)
             {
                 temp = dataset.getServerData(guildName);
                 foreach (var entry in temp)

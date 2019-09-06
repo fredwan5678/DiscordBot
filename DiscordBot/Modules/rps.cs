@@ -3,8 +3,6 @@ using DiscordBot.DataHandlers;
 using DiscordBot.DataHandlers.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DiscordBot.Modules
@@ -16,7 +14,7 @@ namespace DiscordBot.Modules
         [Command("rps")]
         public async Task Game([Remainder]string message)
         {
-            if (Context.User.Username == _handler.lastUser)
+            if (Context.User.Username == _handler.LastUser)
             {
                 await Context.Channel.SendMessageAsync("You cannot play against yourself!");
             } else if (message.StartsWith("||") && message.EndsWith("||"))
@@ -25,50 +23,50 @@ namespace DiscordBot.Modules
                 temp = temp.Trim(' ');
                 if (temp == "r" || temp == "p" || temp == "s")
                 {
-                    if (_handler.lastUserChoice == "")
+                    if (_handler.LastUserChoice == "")
                     {
-                        _handler.lastUser = Context.User.Username;
-                        _handler.lastUserChoice = temp;
-                        await Context.Channel.SendMessageAsync("It is you opponent's turn " + _handler.lastUser + "!!");
+                        _handler.LastUser = Context.User.Username;
+                        _handler.LastUserChoice = temp;
+                        await Context.Channel.SendMessageAsync("It is you opponent's turn " + _handler.LastUser + "!!");
                     } else
                     {
-                        if (_handler.lastUserChoice == temp)
+                        if (_handler.LastUserChoice == temp)
                         {
-                            _handler.AddGame(Context.Guild.Name, _handler.lastUser, Context.User.Username, outcome.TIE);
+                            _handler.AddGame(Context.Guild.Name, _handler.LastUser, Context.User.Username, outcome.TIE);
                             await Context.Channel.SendMessageAsync("TIE!");
                         }
-                        else if (_handler.lastUserChoice == "r" && temp == "p")
+                        else if (_handler.LastUserChoice == "r" && temp == "p")
                         {
-                            _handler.AddGame(Context.Guild.Name, _handler.lastUser, Context.User.Username, outcome.P2);
+                            _handler.AddGame(Context.Guild.Name, _handler.LastUser, Context.User.Username, outcome.P2);
                             await Context.Channel.SendMessageAsync(Context.User.Username + " is the winner!");
                         }
-                        else if (_handler.lastUserChoice == "r" && temp == "s")
+                        else if (_handler.LastUserChoice == "r" && temp == "s")
                         {
-                            _handler.AddGame(Context.Guild.Name, _handler.lastUser, Context.User.Username, outcome.P1);
-                            await Context.Channel.SendMessageAsync(_handler.lastUser + " is the winner!");
+                            _handler.AddGame(Context.Guild.Name, _handler.LastUser, Context.User.Username, outcome.P1);
+                            await Context.Channel.SendMessageAsync(_handler.LastUser + " is the winner!");
                         }
-                        else if (_handler.lastUserChoice == "p" && temp == "r")
+                        else if (_handler.LastUserChoice == "p" && temp == "r")
                         {
-                            _handler.AddGame(Context.Guild.Name, _handler.lastUser, Context.User.Username, outcome.P1);
-                            await Context.Channel.SendMessageAsync(_handler.lastUser + " is the winner!");
+                            _handler.AddGame(Context.Guild.Name, _handler.LastUser, Context.User.Username, outcome.P1);
+                            await Context.Channel.SendMessageAsync(_handler.LastUser + " is the winner!");
                         }
-                        else if (_handler.lastUserChoice == "p" && temp == "s")
+                        else if (_handler.LastUserChoice == "p" && temp == "s")
                         {
-                            _handler.AddGame(Context.Guild.Name, _handler.lastUser, Context.User.Username, outcome.P2);
+                            _handler.AddGame(Context.Guild.Name, _handler.LastUser, Context.User.Username, outcome.P2);
                             await Context.Channel.SendMessageAsync(Context.User.Username + " is the winner!");
                         }
-                        else if (_handler.lastUserChoice == "s" && temp == "r")
+                        else if (_handler.LastUserChoice == "s" && temp == "r")
                         {
-                            _handler.AddGame(Context.Guild.Name, _handler.lastUser, Context.User.Username, outcome.P2);
+                            _handler.AddGame(Context.Guild.Name, _handler.LastUser, Context.User.Username, outcome.P2);
                             await Context.Channel.SendMessageAsync(Context.User.Username + " is the winner!");
                         }
-                        else if (_handler.lastUserChoice == "s" && temp == "p")
+                        else if (_handler.LastUserChoice == "s" && temp == "p")
                         {
-                            _handler.AddGame(Context.Guild.Name, _handler.lastUser, Context.User.Username, outcome.P1);
-                            await Context.Channel.SendMessageAsync(_handler.lastUser + " is the winner!");
+                            _handler.AddGame(Context.Guild.Name, _handler.LastUser, Context.User.Username, outcome.P1);
+                            await Context.Channel.SendMessageAsync(_handler.LastUser + " is the winner!");
                         }
-                        _handler.lastUser = "";
-                        _handler.lastUserChoice = "";
+                        _handler.LastUser = "";
+                        _handler.LastUserChoice = "";
                     }
                 } else
                 {
@@ -83,13 +81,13 @@ namespace DiscordBot.Modules
         [Command("cancelRps")]
         public async Task Cancel()
         {
-            if (_handler.lastUserChoice == "")
+            if (_handler.LastUserChoice == "")
             {
                 await Context.Channel.SendMessageAsync("There is no choice to cancel!");
-            } else if (Context.User.Username == _handler.lastUser)
+            } else if (Context.User.Username == _handler.LastUser)
             {
-                _handler.lastUser = "";
-                _handler.lastUserChoice = "";
+                _handler.LastUser = "";
+                _handler.LastUserChoice = "";
                 await Context.Channel.SendMessageAsync("Rps choice cancelled...");
             } else
             {

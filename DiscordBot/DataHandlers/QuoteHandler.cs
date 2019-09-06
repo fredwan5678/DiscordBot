@@ -2,9 +2,6 @@
 using DiscordBot.Modules;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiscordBot.DataHandlers
 {
@@ -12,11 +9,11 @@ namespace DiscordBot.DataHandlers
     {
         private IDataSaver _saver;
 
-        private const string dataFolder = "Resources";
-        private const string quoteFolder = "quoteData";
-        private const string quoteDirectory = dataFolder + "/" + quoteFolder;
+        private const string DATA_FOLDER = "Resources";
+        private const string QUOTE_FOLDER = "quoteData";
+        private const string QUOTE_DIRECTORY = DATA_FOLDER + "/" + QUOTE_FOLDER;
 
-        private Dictionary<string, QuoteData> quoteData = new Dictionary<string, QuoteData>();
+        private Dictionary<string, QuoteData> _quoteData = new Dictionary<string, QuoteData>();
 
         private ProfileHandler _dataHub;
 
@@ -30,19 +27,19 @@ namespace DiscordBot.DataHandlers
 
         private void SaveQuotes(string guildName)
         {
-            _saver.SaveData(quoteData[guildName], guildName, quoteDirectory);
+            _saver.SaveData(_quoteData[guildName], guildName, QUOTE_DIRECTORY);
         }
 
         private void LoadQuotes(string guildName)
         {
-            if (!quoteData.ContainsKey(guildName))
+            if (!_quoteData.ContainsKey(guildName))
             {
-                quoteData[guildName] = _saver.LoadData<QuoteData>(guildName, quoteDirectory);
-                if (quoteData[guildName].quotes == null)
+                _quoteData[guildName] = _saver.LoadData<QuoteData>(guildName, QUOTE_DIRECTORY);
+                if (_quoteData[guildName].quotes == null)
                 {
                     QuoteData data = new QuoteData();
                     data.quotes = new List<string>();
-                    quoteData[guildName] = data;
+                    _quoteData[guildName] = data;
                 }
             }
         }
@@ -50,20 +47,20 @@ namespace DiscordBot.DataHandlers
         public void AddQuote(string quote, string serverName)
         {
             LoadQuotes(serverName);
-            quoteData[serverName].quotes.Add(quote);
+            _quoteData[serverName].quotes.Add(quote);
             SaveQuotes(serverName);
         }
 
         public bool RemoveQuote(int quoteNumber, string serverName)
         {
             LoadQuotes(serverName);
-            if (quoteNumber > quoteData[serverName].quotes.Count || quoteNumber <= 0)
+            if (quoteNumber > _quoteData[serverName].quotes.Count || quoteNumber <= 0)
             {
                 return false;
             }
             else
             {
-                quoteData[serverName].quotes.RemoveAt(quoteNumber - 1);
+                _quoteData[serverName].quotes.RemoveAt(quoteNumber - 1);
                 SaveQuotes(serverName);
                 return true;
             }
@@ -72,13 +69,13 @@ namespace DiscordBot.DataHandlers
         public string getQuote(int quoteNumber, string serverName)
         {
             LoadQuotes(serverName);
-            if (quoteNumber > quoteData[serverName].quotes.Count || quoteNumber < 1)
+            if (quoteNumber > _quoteData[serverName].quotes.Count || quoteNumber < 1)
             {
                 return "";
             }
             else
             {
-                return quoteData[serverName].quotes[quoteNumber - 1];
+                return _quoteData[serverName].quotes[quoteNumber - 1];
             }
         }
 
@@ -90,19 +87,19 @@ namespace DiscordBot.DataHandlers
                 return "";
             }
             Random random = new Random();
-            return quoteData[serverName].quotes[random.Next(quoteData[serverName].quotes.Count)];
+            return _quoteData[serverName].quotes[random.Next(_quoteData[serverName].quotes.Count)];
         }
 
         public int GetQuoteAmt(string serverName)
         {
             LoadQuotes(serverName);
-            return quoteData[serverName].quotes.Count;
+            return _quoteData[serverName].quotes.Count;
         }
 
         public string[] GetAllQuotes(string serverName)
         {
             LoadQuotes(serverName);
-            return quoteData[serverName].quotes.ToArray();
+            return _quoteData[serverName].quotes.ToArray();
         }
 
         public Dictionary<string, string> getServerData(string server)
@@ -116,7 +113,7 @@ namespace DiscordBot.DataHandlers
 
         public void registerToServerProfile()
         {
-            _dataHub.serverData.Add(this);
+            _dataHub.ServerData.Add(this);
         }
     }
 
