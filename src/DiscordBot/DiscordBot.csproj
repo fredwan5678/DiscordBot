@@ -205,19 +205,7 @@
   <ItemGroup>
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="DataHandlers\IQuoteHandler.cs" />
-    <Compile Include="DataHandlers\ProfileHandler.cs" />
-    <Compile Include="DataHandlers\ProfileHandlerBase.cs" />
-    <Compile Include="DataHandlers\QuoteHandler.cs" />
-    <Compile Include="DataHandlers\RpsHandler.cs" />
-    <Compile Include="DataHandlers\RpsHandlerBase.cs" />
-    <Compile Include="DataHandlers\Utilities\Enums.cs" />
-    <Compile Include="DataHandlers\Utilities\RpsPlayer.cs" />
     <Compile Include="DIConfig.cs" />
-    <Compile Include="DataSaving\IDataSaver.cs" />
-    <Compile Include="DataSaving\JsonDataSaver.cs" />
-    <Compile Include="Modules\IServerData.cs" />
-    <Compile Include="Modules\IUserData.cs" />
     <Compile Include="Modules\Misc.cs" />
     <Compile Include="Modules\profiles.cs" />
     <Compile Include="Modules\Quotes.cs" />
@@ -233,6 +221,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Lib\Lib.csproj">
+      <Project>{8726e929-2d33-4447-bdf7-c04da99e1787}</Project>
+      <Name>Lib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

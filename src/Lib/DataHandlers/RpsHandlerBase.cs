@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using DiscordBot.Util;
+using Lib.Util;
 
-namespace DiscordBot.DataHandlers
+namespace Lib.DataHandlers
 {
     public abstract class RpsHandlerBase
     {

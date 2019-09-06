@@ -1,10 +1,9 @@
-﻿using DiscordBot.DataSaving;
-using DiscordBot.Modules;
-using DiscordBot.Util;
+﻿using Lib.DataSaving;
+using Lib.Util;
 using System;
 using System.Collections.Generic;
 
-namespace DiscordBot.DataHandlers
+namespace Lib.DataHandlers
 {
     public class RpsHandler : RpsHandlerBase, IServerData, IUserData
     {

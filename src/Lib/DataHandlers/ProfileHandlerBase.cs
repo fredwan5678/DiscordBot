@@ -1,7 +1,6 @@
-﻿using DiscordBot.Modules;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace DiscordBot.DataHandlers
+namespace Lib.DataHandlers
 {
     public abstract class ProfileHandlerBase
     {

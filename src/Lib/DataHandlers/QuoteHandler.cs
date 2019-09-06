@@ -1,9 +1,8 @@
-﻿using DiscordBot.DataSaving;
-using DiscordBot.Modules;
+﻿using Lib.DataSaving;
 using System;
 using System.Collections.Generic;
 
-namespace DiscordBot.DataHandlers
+namespace Lib.DataHandlers
 {
     public class QuoteHandler : IQuoteHandler, IServerData
     {

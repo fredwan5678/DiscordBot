@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DiscordBot.DataHandlers
+﻿namespace Lib.DataHandlers
 {
     public interface IQuoteHandler
     {

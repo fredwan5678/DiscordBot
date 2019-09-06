@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Reflection;
-using DiscordBot.DataSaving;
-using DiscordBot.DataHandlers;
+using Lib.DataSaving;
 using Microsoft.Extensions.DependencyInjection;
+using Lib.DataHandlers;
 
 namespace DiscordBot
 {
@@ -16,19 +16,34 @@ namespace DiscordBot
             {
                 serviceCollection.AddSingleton<IDataSaver, JsonDataSaver>();
             }
-            serviceCollection.AddSingleton<IQuoteHandler, QuoteHandler>();
-            serviceCollection.AddSingleton<RpsHandlerBase, RpsHandler>();
-            serviceCollection.AddSingleton<ProfileHandlerBase, ProfileHandler>();
 
-            /*var assembly = Assembly.Load()
+            var assembly = Assembly.Load(nameof(Lib));
             
             foreach (Type type in assembly.GetTypes())
             {
-                if (!type.IsAbstract && !type.IsInterface)
+                if (type.IsClass && 
+                    !type.IsAbstract && 
+                    !type.IsInterface && 
+                    type.Namespace.Contains("DataHandlers") &&
+                    (type.BaseType.Name != "Object" || type.GetInterfaces().Length != 0))
                 {
-                    serviceCollection.AddSingleton(type.BaseType, type);
+                    if (type.BaseType.Name != "Object")
+                    {
+                        serviceCollection.AddSingleton(type.BaseType, type);
+                    }
+                    else
+                    {
+                        foreach (Type inter in type.GetInterfaces())
+                        {
+                            if (inter.Name.Contains(type.Name))
+                            {
+                                serviceCollection.AddSingleton(inter, type);
+                                break;
+                            }
+                        }
+                    }
                 }
-            }*/
+            }
 
             return serviceCollection.BuildServiceProvider();
         }

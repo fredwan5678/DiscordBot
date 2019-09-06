@@ -1,6 +1,6 @@
 ﻿using Discord.Commands;
-using DiscordBot.DataHandlers;
-using DiscordBot.Util;
+using Lib.DataHandlers;
+using Lib.Util;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace DiscordBot.Util
+namespace Lib.Util
 {
     public class RpsPlayer : IComparable<RpsPlayer>, IEquatable<RpsPlayer>
     {

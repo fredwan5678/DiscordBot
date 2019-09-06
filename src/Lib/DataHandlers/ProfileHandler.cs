@@ -1,8 +1,7 @@
-﻿using DiscordBot.DataSaving;
-using DiscordBot.Modules;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Lib.DataSaving;
 
-namespace DiscordBot.DataHandlers
+namespace Lib.DataHandlers
 {
     public class ProfileHandler : ProfileHandlerBase
     {

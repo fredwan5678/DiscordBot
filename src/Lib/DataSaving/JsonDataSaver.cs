@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using Newtonsoft.Json;
 
-namespace DiscordBot.DataSaving
+namespace Lib.DataSaving
 {
-    class JsonDataSaver : IDataSaver
+    public class JsonDataSaver : IDataSaver
     {
         public T LoadData<T>(string fileName, string folderName)
         {

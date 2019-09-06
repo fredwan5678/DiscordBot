@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DiscordBot.Modules
+namespace Lib.DataHandlers
 {
     public interface IServerData
     {

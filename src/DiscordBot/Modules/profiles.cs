@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using DiscordBot.DataHandlers;
+using Lib.DataHandlers;
 
 namespace DiscordBot.Modules
 {
