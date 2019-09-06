@@ -7,7 +7,7 @@ namespace DiscordBot.Modules
 {
     public class Quotes : ModuleBase<SocketCommandContext>
     {
-        public QuoteHandler _handler { get; set; }
+        public IQuoteHandler _handler { get; set; }
 
         [Command("addQuote")]
         public async Task AddQuote([Remainder]string message)

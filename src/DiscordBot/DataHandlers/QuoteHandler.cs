@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DiscordBot.DataHandlers
 {
-    public class QuoteHandler : IServerData
+    public class QuoteHandler : IQuoteHandler, IServerData
     {
         private IDataSaver _saver;
 
@@ -15,14 +15,14 @@ namespace DiscordBot.DataHandlers
 
         private Dictionary<string, QuoteData> _quoteData = new Dictionary<string, QuoteData>();
 
-        private ProfileHandler _dataHub;
+        private ProfileHandlerBase _dataHub;
 
-        public QuoteHandler(IDataSaver saver, ProfileHandler dataHub)
+        public QuoteHandler(IDataSaver saver, ProfileHandlerBase dataHub)
         {
             _saver = saver;
             _dataHub = dataHub;
 
-            registerToServerProfile();
+            RegisterToServerProfile();
         }
 
         private void SaveQuotes(string guildName)
@@ -111,7 +111,7 @@ namespace DiscordBot.DataHandlers
             return data;
         }
 
-        public void registerToServerProfile()
+        public void RegisterToServerProfile()
         {
             _dataHub.ServerData.Add(this);
         }

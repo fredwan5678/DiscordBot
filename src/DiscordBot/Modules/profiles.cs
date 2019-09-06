@@ -8,7 +8,7 @@ namespace DiscordBot.Modules
 {
     public class profiles : ModuleBase<SocketCommandContext>
     {
-        public ProfileHandler _handler { get; set; }
+        public ProfileHandlerBase _handler { get; set; }
 
         [Command("userProfile")]
         public async Task User(IGuildUser user)

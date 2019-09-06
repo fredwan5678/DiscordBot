@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DiscordBot.DataHandlers
 {
-    public class ProfileHandler
+    public class ProfileHandler : ProfileHandlerBase
     {
         private IDataSaver _saver;
 
@@ -13,9 +13,6 @@ namespace DiscordBot.DataHandlers
         private const string WARN_DIRECTORY = DATA_FOLDER + "/" + WARN_FOLDER;
 
         private Dictionary<string, WarnData> _warnData = new Dictionary<string, WarnData>();
-
-        public List<IUserData> UserData = new List<IUserData>();
-        public List<IServerData> ServerData = new List<IServerData>();
 
         public ProfileHandler(IDataSaver saver)
         {
@@ -41,7 +38,7 @@ namespace DiscordBot.DataHandlers
             }
         }
 
-        public int AddWarn(string guildName, string user)
+        public override int AddWarn(string guildName, string user)
         {
             LoadWarnings(guildName);
             _warnData[guildName].warnings[user]++;
@@ -50,7 +47,7 @@ namespace DiscordBot.DataHandlers
             return _warnData[guildName].warnings[user];
         }
 
-        public int RemoveWarn(string guildName, string user)
+        public override int RemoveWarn(string guildName, string user)
         {
             LoadWarnings(guildName);
             _warnData[guildName].warnings[user]--;
@@ -63,14 +60,14 @@ namespace DiscordBot.DataHandlers
             return _warnData[guildName].warnings[user];
         }
 
-        public void ResetWarn(string guildName, string user)
+        public override void ResetWarn(string guildName, string user)
         {
             LoadWarnings(guildName);
             _warnData[guildName].warnings[user] = 0;
             SaveWarnings(guildName);
         }
 
-        public Dictionary<string, string> GenerateUserProfile(string guildName, string user)
+        public override Dictionary<string, string> GenerateUserProfile(string guildName, string user)
         {
             LoadWarnings(guildName);
             Dictionary<string, string> userProperties = new Dictionary<string, string>();
@@ -95,7 +92,7 @@ namespace DiscordBot.DataHandlers
             return userProperties;
         }
 
-        public Dictionary<string, string> GenerateServerProfile(string guildName)
+        public override Dictionary<string, string> GenerateServerProfile(string guildName)
         {
             Dictionary<string, string> serverProperties = new Dictionary<string, string>();
 

@@ -9,7 +9,7 @@ namespace DiscordBot.Modules
 {
     public class rps : ModuleBase<SocketCommandContext>
     {
-        public RpsHandler _handler { get; set; }
+        public RpsHandlerBase _handler { get; set; }
 
         [Command("rps")]
         public async Task Game([Remainder]string message)

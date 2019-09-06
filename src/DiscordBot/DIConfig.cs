@@ -16,9 +16,9 @@ namespace DiscordBot
             {
                 serviceCollection.AddSingleton<IDataSaver, JsonDataSaver>();
             }
-            serviceCollection.AddSingleton<QuoteHandler>();
-            serviceCollection.AddSingleton<RpsHandler>();
-            serviceCollection.AddSingleton<ProfileHandler>();
+            serviceCollection.AddSingleton<IQuoteHandler, QuoteHandler>();
+            serviceCollection.AddSingleton<RpsHandlerBase, RpsHandler>();
+            serviceCollection.AddSingleton<ProfileHandlerBase, ProfileHandler>();
 
             return serviceCollection.BuildServiceProvider();
         }

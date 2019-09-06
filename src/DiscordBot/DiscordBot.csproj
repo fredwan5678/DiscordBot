@@ -205,9 +205,12 @@
   <ItemGroup>
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="DataHandlers\IQuoteHandler.cs" />
     <Compile Include="DataHandlers\ProfileHandler.cs" />
+    <Compile Include="DataHandlers\ProfileHandlerBase.cs" />
     <Compile Include="DataHandlers\QuoteHandler.cs" />
     <Compile Include="DataHandlers\RpsHandler.cs" />
+    <Compile Include="DataHandlers\RpsHandlerBase.cs" />
     <Compile Include="DataHandlers\Utilities\Enums.cs" />
     <Compile Include="DataHandlers\Utilities\RpsPlayer.cs" />
     <Compile Include="DIConfig.cs" />

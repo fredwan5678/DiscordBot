@@ -6,6 +6,6 @@ namespace DiscordBot.Modules
     {
         Dictionary<string, string> getUserData(string server, string user);
 
-        void registerToProfile();
+        void RegisterToProfile();
     }
 }

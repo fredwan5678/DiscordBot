@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace DiscordBot.DataHandlers
 {
-    public class RpsHandler : IServerData, IUserData
+    public class RpsHandler : RpsHandlerBase, IServerData, IUserData
     {
         private IDataSaver _saver;
 
@@ -16,18 +16,15 @@ namespace DiscordBot.DataHandlers
 
         private Dictionary<string, RpsLeaderboard> _leaderboard = new Dictionary<string, RpsLeaderboard>();
 
-        private ProfileHandler _dataHub;
+        private ProfileHandlerBase _dataHub;
 
-        public string LastUser = "";
-        public string LastUserChoice = "";
-
-        public RpsHandler(IDataSaver saver, ProfileHandler dataHub)
+        public RpsHandler(IDataSaver saver, ProfileHandlerBase dataHub)
         {
             _saver = saver;
             _dataHub = dataHub;
 
-            registerToProfile();
-            registerToServerProfile();
+            RegisterToProfile();
+            RegisterToServerProfile();
         }
 
         private void SaveLeaderboard(string guildName)
@@ -88,7 +85,7 @@ namespace DiscordBot.DataHandlers
             SaveLeaderboard(guildName);
         }
 
-        public void AddGame(string guildName, string player1, string player2, outcome winner)
+        public override void AddGame(string guildName, string player1, string player2, outcome winner)
         {
             LoadLeaderboard(guildName);
             if (!_leaderboard[guildName].leaderboardNames.ContainsKey(player1))
@@ -117,7 +114,7 @@ namespace DiscordBot.DataHandlers
             SaveLeaderboard(guildName);
         }
 
-        public Dictionary<string, int> GenerateLeaderboard(string server, int amt)
+        public override Dictionary<string, int> GenerateLeaderboard(string server, int amt)
         {
             LoadLeaderboard(server);
             Dictionary<string, int> board = new Dictionary<string, int>();
@@ -125,7 +122,7 @@ namespace DiscordBot.DataHandlers
             amt = Math.Min(amt, _leaderboard[server].leaderboardNames.Count);
             var iter = _leaderboard[server].leaderboardScores.Reverse().GetEnumerator();
 
-            for (int i = 0; i < amt; i++ )
+            for (int i = 0; i < amt; i++)
             {
                 iter.MoveNext();
                 board[iter.Current.getName()] = iter.Current.getScore();
@@ -186,12 +183,12 @@ namespace DiscordBot.DataHandlers
             return data;
         }
 
-        public void registerToProfile()
+        public void RegisterToProfile()
         {
             _dataHub.UserData.Add(this);
         }
 
-        public void registerToServerProfile()
+        public void RegisterToServerProfile()
         {
             _dataHub.ServerData.Add(this);
         }
