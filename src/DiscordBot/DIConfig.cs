@@ -32,9 +32,11 @@ namespace DiscordBot
                     }
                     else
                     {
+                        string name;
                         foreach (Type inter in type.GetInterfaces())
                         {
-                            if (inter.Name.Contains(type.Name))
+                            name = inter.Name.Substring(1);
+                            if (type.Name.Contains(name))
                             {
                                 serviceCollection.AddSingleton(inter, type);
                                 break;

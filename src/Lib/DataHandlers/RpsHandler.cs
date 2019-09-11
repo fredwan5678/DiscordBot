@@ -1,5 +1,4 @@
-﻿using Lib.DataSaving;
-using Lib.Util;
+﻿using Lib.Util;
 using System;
 using System.Collections.Generic;
 
@@ -7,119 +6,43 @@ namespace Lib.DataHandlers
 {
     public class RpsHandler : RpsHandlerBase, IServerData, IUserData
     {
-        private IDataSaver _saver;
-
-        private const string DATA_FOLDER = "Resources";
-        private const string LEADERBOARD_FOLDER = "RpsData";
-        private const string LEADERBOARD_DIRECTORY = DATA_FOLDER + "/" + LEADERBOARD_FOLDER;
-
-        private Dictionary<string, RpsLeaderboard> _leaderboard = new Dictionary<string, RpsLeaderboard>();
+        private ILeaderboardHandler _leaderboard;
 
         private ProfileHandlerBase _dataHub;
 
-        public RpsHandler(IDataSaver saver, ProfileHandlerBase dataHub)
+        public RpsHandler(ILeaderboardHandler leaderboard, ProfileHandlerBase dataHub)
         {
-            _saver = saver;
+            _leaderboard = leaderboard;
             _dataHub = dataHub;
 
             RegisterToProfile();
             RegisterToServerProfile();
         }
 
-        private void SaveLeaderboard(string guildName)
-        {
-            _saver.SaveData(_leaderboard[guildName], guildName, LEADERBOARD_DIRECTORY);
-        }
-
-        private void LoadLeaderboard(string guildName)
-        {
-            if (!_leaderboard.ContainsKey(guildName))
-            {
-                _leaderboard[guildName] = _saver.LoadData<RpsLeaderboard>(guildName, LEADERBOARD_DIRECTORY);
-                if (_leaderboard[guildName].leaderboardNames == null)
-                {
-                    RpsLeaderboard data = new RpsLeaderboard();
-                    data.leaderboardNames = new Dictionary<string, RpsPlayer>();
-                    data.leaderboardScores = new SortedSet<RpsPlayer>();
-                    _leaderboard[guildName] = data;
-                }
-            }
-        }
-
-        private void Winner(string guildName, string player)
-        {
-            RpsPlayer temp = _leaderboard[guildName].leaderboardNames[player];
-            _leaderboard[guildName].leaderboardScores.Remove(temp);
-            _leaderboard[guildName].leaderboardNames[player].AddWin();
-            _leaderboard[guildName].leaderboardScores.Add(_leaderboard[guildName].leaderboardNames[player]);
-        }
-
-        private void Loser(string guildName, string player)
-        {
-            RpsPlayer temp = _leaderboard[guildName].leaderboardNames[player];
-            _leaderboard[guildName].leaderboardScores.Remove(temp);
-            _leaderboard[guildName].leaderboardNames[player].AddLoss();
-            _leaderboard[guildName].leaderboardScores.Add(_leaderboard[guildName].leaderboardNames[player]);
-        }
-
-        private void Tie(string guildName, string player1, string player2)
-        {
-            RpsPlayer temp = _leaderboard[guildName].leaderboardNames[player1];
-            _leaderboard[guildName].leaderboardScores.Remove(temp);
-            _leaderboard[guildName].leaderboardNames[player1].AddTie();
-            _leaderboard[guildName].leaderboardScores.Add(_leaderboard[guildName].leaderboardNames[player1]);
-
-            temp = _leaderboard[guildName].leaderboardNames[player2];
-            _leaderboard[guildName].leaderboardScores.Remove(temp);
-            _leaderboard[guildName].leaderboardNames[player2].AddTie();
-            _leaderboard[guildName].leaderboardScores.Add(_leaderboard[guildName].leaderboardNames[player2]);
-        }
-
-        private void AddPlayer(string playerName, string guildName)
-        {
-            LoadLeaderboard(guildName);
-            RpsPlayer player = new RpsPlayer(playerName);
-            _leaderboard[guildName].leaderboardNames[playerName] = player;
-            _leaderboard[guildName].leaderboardScores.Add(player);
-            SaveLeaderboard(guildName);
-        }
-
         public override void AddGame(string guildName, string player1, string player2, outcome winner)
         {
-            LoadLeaderboard(guildName);
-            if (!_leaderboard[guildName].leaderboardNames.ContainsKey(player1))
-            {
-                AddPlayer(player1, guildName);
-            }
-            if (!_leaderboard[guildName].leaderboardNames.ContainsKey(player2))
-            {
-                AddPlayer(player2, guildName);
-            }
-
             if (winner == outcome.P1)
             {
-                Winner(guildName, player1);
-                Loser(guildName, player2);
+                _leaderboard.Winner(guildName, player1);
+                _leaderboard.Loser(guildName, player2);
             }
             else if (winner == outcome.P2)
             {
-                Winner(guildName, player2);
-                Loser(guildName, player1);
+                _leaderboard.Winner(guildName, player2);
+                _leaderboard.Loser(guildName, player1);
             }
             else if (winner == outcome.TIE)
             {
-                Tie(guildName, player1, player2);
+                _leaderboard.Tie(guildName, player1, player2);
             }
-            SaveLeaderboard(guildName);
         }
 
         public override Dictionary<string, int> GenerateLeaderboard(string server, int amt)
         {
-            LoadLeaderboard(server);
             Dictionary<string, int> board = new Dictionary<string, int>();
 
-            amt = Math.Min(amt, _leaderboard[server].leaderboardNames.Count);
-            var iter = _leaderboard[server].leaderboardScores.Reverse().GetEnumerator();
+            amt = Math.Min(amt, _leaderboard.Board(server).leaderboardNames.Count);
+            var iter = _leaderboard.Board(server).leaderboardScores.Reverse().GetEnumerator();
 
             for (int i = 0; i < amt; i++)
             {
@@ -132,13 +55,11 @@ namespace Lib.DataHandlers
 
         public Dictionary<string, string> getServerData(string server)
         {
-            LoadLeaderboard(server);
-
             Dictionary<string, string> data = new Dictionary<string, string>();
 
-            var iter = _leaderboard[server].leaderboardScores.Reverse().GetEnumerator();
+            var iter = _leaderboard.Board(server).leaderboardScores.Reverse().GetEnumerator();
 
-            int amt = Math.Min(3, _leaderboard[server].leaderboardNames.Count);
+            int amt = Math.Min(3, _leaderboard.Board(server).leaderboardNames.Count);
 
             if (amt == 0) data["Top RPS Players: "] = "No rps games played yet...";
             else
@@ -161,16 +82,14 @@ namespace Lib.DataHandlers
 
         public Dictionary<string, string> getUserData(string server, string user)
         {
-            LoadLeaderboard(server);
-
             Dictionary<string, string> data = new Dictionary<string, string>();
 
-            if (_leaderboard[server].leaderboardNames.ContainsKey(user))
+            if (_leaderboard.Board(server).leaderboardNames.ContainsKey(user))
             {
-                data["RPS score: "] = _leaderboard[server].leaderboardNames[user].getScore().ToString();
-                data["RPS wins: "] = _leaderboard[server].leaderboardNames[user].getWins().ToString();
-                data["RPS losses: "] = _leaderboard[server].leaderboardNames[user].getLosses().ToString();
-                data["Total RPS games: "] = _leaderboard[server].leaderboardNames[user].getTotal().ToString();
+                data["RPS score: "] = _leaderboard.Board(server).leaderboardNames[user].getScore().ToString();
+                data["RPS wins: "] = _leaderboard.Board(server).leaderboardNames[user].getWins().ToString();
+                data["RPS losses: "] = _leaderboard.Board(server).leaderboardNames[user].getLosses().ToString();
+                data["Total RPS games: "] = _leaderboard.Board(server).leaderboardNames[user].getTotal().ToString();
             }
             else
             {
@@ -191,11 +110,5 @@ namespace Lib.DataHandlers
         {
             _dataHub.ServerData.Add(this);
         }
-    }
-
-    struct RpsLeaderboard
-    {
-        public SortedSet<RpsPlayer> leaderboardScores;
-        public Dictionary<string, RpsPlayer> leaderboardNames;
     }
 }
