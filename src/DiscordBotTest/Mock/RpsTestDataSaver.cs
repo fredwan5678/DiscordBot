@@ -14,12 +14,12 @@ namespace DiscordBotTest.Mock
         private string TEST_FOLDER = "TestResults";
         private string TEST_FILE = "RpsDataSaverTestResult";
 
-        private Dictionary<string, RpsPlayer> _testNames = new Dictionary<string, RpsPlayer>();
-        private SortedSet<RpsPlayer> _testScores = new SortedSet<RpsPlayer>();
+        private Dictionary<string, Player> _testNames = new Dictionary<string, Player>();
+        private SortedSet<Player> _testScores = new SortedSet<Player>();
 
         public T LoadData<T>(string fileName, string folderName)
         {
-            RpsLeaderboard testData = new RpsLeaderboard();
+            Leaderboard testData = new Leaderboard();
             testData.leaderboardNames = _testNames;
             testData.leaderboardScores = _testScores;
 

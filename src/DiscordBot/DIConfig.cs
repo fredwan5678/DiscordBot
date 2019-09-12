@@ -2,6 +2,9 @@
 using System.Reflection;
 using Lib.DataSaving;
 using Microsoft.Extensions.DependencyInjection;
+using Lib.DataHandlers;
+using Lib.Util;
+using System.Collections.Generic;
 
 namespace DiscordBot
 {
@@ -18,6 +21,7 @@ namespace DiscordBot
 
             var assembly = Assembly.Load(nameof(Lib));
             
+
             foreach (Type type in assembly.GetTypes())
             {
                 if (type.IsClass && 
@@ -32,13 +36,16 @@ namespace DiscordBot
                     }
                     else
                     {
-                        string name;
                         foreach (Type inter in type.GetInterfaces())
                         {
-                            name = inter.Name.Substring(1);
-                            if (type.Name.Contains(name))
+                            if (inter.Name.Contains(type.Name))
                             {
                                 serviceCollection.AddSingleton(inter, type);
+                                break;
+                            }
+                            else if (type.Name.Contains(inter.Name.Substring(1)))
+                            {
+                                serviceCollection.AddTransient(type);
                                 break;
                             }
                         }
@@ -46,6 +53,19 @@ namespace DiscordBot
                 }
             }
 
+            serviceCollection.AddTransient<RpsLeaderboardHandler>();
+
+            serviceCollection.AddTransient<ServiceResolver>(serviceProvider => user =>
+            {
+                switch (user)
+                {
+                    case "RpsHandler":
+                        return serviceProvider.GetService<RpsLeaderboardHandler>();
+                    default:
+                        throw new KeyNotFoundException();
+                }
+            });
+            
             return serviceCollection.BuildServiceProvider();
         }
     }

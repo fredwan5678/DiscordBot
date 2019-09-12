@@ -10,9 +10,9 @@ namespace Lib.DataHandlers
 
         private ProfileHandlerBase _dataHub;
 
-        public RpsHandler(ILeaderboardHandler leaderboard, ProfileHandlerBase dataHub)
+        public RpsHandler(ServiceResolver serviceResolver, ProfileHandlerBase dataHub)
         {
-            _leaderboard = leaderboard;
+            _leaderboard = serviceResolver("RpsHandler");
             _dataHub = dataHub;
 
             RegisterToProfile();

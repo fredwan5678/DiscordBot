@@ -6,7 +6,7 @@ using Lib.DataSaving;
 
 namespace Lib.DataHandlers
 {
-    class RpsLeaderboardHandler : ILeaderboardHandler
+    public class RpsLeaderboardHandler : ILeaderboardHandler
     {
         private IDataSaver _saver;
         private const string DATA_FOLDER = "Resources";
